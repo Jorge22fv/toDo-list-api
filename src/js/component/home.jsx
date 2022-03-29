@@ -2,11 +2,7 @@ import React, { useState } from "react";
 import { Todo } from "./todo.jsx";
 
 const Home = () => {
-	const [todos, setTodos] = useState([
-		"Finish this code",
-		"Walk the dog",
-		"Do exercises",
-	]);
+	const [todos, setTodos] = useState([]);
 
 	const [newTodo, setNewTodo] = useState("");
 
@@ -15,25 +11,40 @@ const Home = () => {
 		setTodos([...todos, newTodo]);
 	};
 
-	const eliminate = () => {};
+	//const result = words.filter(word => word.length > 6);
+	const eliminate = (index) => {
+		const filteredTodos = todos.filter((newString, i) => i !== index);
+		setTodos(filteredTodos);
+	};
 
 	return (
-		<div className="bg-secondary bg-opacity-25 text-center">
-			<h1>To-Do list</h1>
+		<div className="to-do text-center border border-danger">
+			<div>
+				<h1 id="title"> To-Do list</h1>
 
-			<input
-				className="rounded"
-				placeholder="Add a new homework"
-				onChange={(e) => setNewTodo(e.target.value)}
-			/>
+				<input
+					className="rounded-start"
+					placeholder="Add a new homework"
+					onChange={(e) => setNewTodo(e.target.value)}
+				/>
 
-			<button className="rounded" onClick={() => handleClick(newTodo)}>
-				Add to the list
-			</button>
+				<button
+					className="rounded-end"
+					onClick={() => handleClick(newTodo)}>
+					<i class="fas fa-check"></i>
+				</button>
 
-			{todos.map((todo, index) => {
-				return <Todo key={index} todo={todo} />;
-			})}
+				{todos.map((todo, index) => {
+					return (
+						<Todo
+							key={index}
+							todo={todo}
+							eliminate={eliminate}
+							index={index}
+						/>
+					);
+				})}
+			</div>
 		</div>
 	);
 };
