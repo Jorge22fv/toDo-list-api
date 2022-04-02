@@ -5,7 +5,7 @@ export const Todo = ({ index, todo, eliminate }) => {
 		<ul className="text-start">
 			<li onClick={() => eliminate(index)}>
 				{todo}
-				<i id="trash" class="far fa-trash-alt"></i>
+				<i id="trash" className="far fa-trash-alt"></i>
 			</li>
 		</ul>
 	);

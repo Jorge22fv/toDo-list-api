@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Todo } from "./todo.jsx";
 
 const Home = () => {
-	const [todos, setTodos] = useState([]);
+	const [todos, setTodos] = useState(["Do the codes", "Make lunch"]);
 
 	const [newTodo, setNewTodo] = useState("");
 
@@ -31,7 +31,7 @@ const Home = () => {
 				<button
 					className="rounded-end"
 					onClick={() => handleClick(newTodo)}>
-					<i class="fas fa-check"></i>
+					<i className="fas fa-check"></i>
 				</button>
 
 				{todos.map((todo, index) => {
