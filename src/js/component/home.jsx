@@ -1,14 +1,30 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Todo } from "./todo.jsx";
 
 const Home = () => {
-	const [todos, setTodos] = useState(["Do the codes", "Make lunch"]);
+	const [todos, setTodos] = useState([]);
 
-	const [newTodo, setNewTodo] = useState("");
+	const [newTodo, setNewTodo] = useState();
 
 	const handleClick = (newTodo) => {
-		if (newTodo === "") return;
+		if (newTodo.label === "") return;
 		setTodos([...todos, newTodo]);
+		var requestOptions = {
+			method: "PUT",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify([...todos, newTodo]),
+			redirect: "follow",
+		};
+
+		fetch(
+			"https://assets.breatheco.de/apis/fake/todos/user/jorge22fv",
+			requestOptions
+		)
+			.then((response) => response.text())
+			.then((result) => console.log(result))
+			.catch((error) => console.log("error", error));
 	};
 
 	//const result = words.filter(word => word.length > 6);
@@ -16,6 +32,24 @@ const Home = () => {
 		const filteredTodos = todos.filter((newString, i) => i !== index);
 		setTodos(filteredTodos);
 	};
+
+	useEffect(() => {
+		var requestOptions = {
+			method: "GET",
+			redirect: "follow",
+		};
+
+		fetch(
+			"https://assets.breatheco.de/apis/fake/todos/user/jorge22fv",
+			requestOptions
+		)
+			.then((response) => response.json())
+			.then((result) => {
+				console.log(result);
+				setTodos(result);
+			})
+			.catch((error) => console.log("error", error));
+	}, []);
 
 	return (
 		<div className="to-do text-center border border-danger">
@@ -25,7 +59,9 @@ const Home = () => {
 				<input
 					className="rounded-start"
 					placeholder="Add a new homework"
-					onChange={(e) => setNewTodo(e.target.value)}
+					onChange={(e) =>
+						setNewTodo({ label: e.target.value, done: false })
+					}
 				/>
 
 				<button
