@@ -6,9 +6,8 @@ const Home = () => {
 
 	const [newTodo, setNewTodo] = useState();
 
-	const handleClick = (newTodo) => {
+	const handleClick = async (newTodo) => {
 		if (newTodo.label === "") return;
-		setTodos([...todos, newTodo]);
 		var requestOptions = {
 			method: "PUT",
 			headers: {
@@ -22,15 +21,34 @@ const Home = () => {
 			"https://assets.breatheco.de/apis/fake/todos/user/jorge22fv",
 			requestOptions
 		)
-			.then((response) => response.text())
+			.then((response) => response.json())
 			.then((result) => console.log(result))
 			.catch((error) => console.log("error", error));
+
+		setTodos([...todos, newTodo]);
 	};
 
 	//const result = words.filter(word => word.length > 6);
 	const eliminate = (index) => {
 		const filteredTodos = todos.filter((newString, i) => i !== index);
 		setTodos(filteredTodos);
+
+		var requestOptions = {
+			method: "PUT",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify(filteredTodos),
+			redirect: "follow",
+		};
+
+		fetch(
+			"https://assets.breatheco.de/apis/fake/todos/user/jorge22fv",
+			requestOptions
+		)
+			.then((response) => response.json())
+			.then((result) => console.log(result))
+			.catch((error) => console.log("error", error));
 	};
 
 	useEffect(() => {
@@ -45,8 +63,11 @@ const Home = () => {
 		)
 			.then((response) => response.json())
 			.then((result) => {
-				console.log(result);
-				setTodos(result);
+				if (result.msg) {
+					return;
+				} else {
+					setTodos(result);
+				}
 			})
 			.catch((error) => console.log("error", error));
 	}, []);
@@ -70,16 +91,20 @@ const Home = () => {
 					<i className="fas fa-check"></i>
 				</button>
 
-				{todos.map((todo, index) => {
-					return (
-						<Todo
-							key={index}
-							todo={todo}
-							eliminate={eliminate}
-							index={index}
-						/>
-					);
-				})}
+				{todos.length > 0 ? (
+					todos.map((todo, index) => {
+						return (
+							<Todo
+								key={index}
+								todo={todo}
+								eliminate={eliminate}
+								index={index}
+							/>
+						);
+					})
+				) : (
+					<h1>There are no todo's</h1>
+				)}
 			</div>
 		</div>
 	);
